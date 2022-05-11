@@ -5,13 +5,16 @@ function computerPlay(){
     const randomChoiceIndex = Math.floor(Math.random() * 3)
     return choices[randomChoiceIndex];
 }
+
+const roundResult = document.querySelector('#roundResult');
+const runningScore = document.querySelector('#runningScore')
 const container = document.getElementById('container')
 //return a number based on who wins
-function playRound(e){
-
-    let playerSelection = e.target.value
-    let computerSelection = computerPlay();
+function playRound(playerSelection, computerSelection){
+    let playerSelection = playerSelection.toLowerCase();
+    let computerSelection = computerPlay().toLowerCase();
     let display = document.createElement('div');
+    let runningScore = document.createElement('div');
     
     if(playerSelection === "Rock" && computerSelection === "Paper"){
 
@@ -40,19 +43,22 @@ function playRound(e){
         display.textContent = "It's a tie!"
     }
 
-    
-    //let text = ${text} You chose ${playerSelection} and Computer chose `${computerSelection}.
-    display.classList.add('h-1','text-white','mt-3')
-    container.appendChild(display)
+    display.classList.add('lead','text-white','mt-3','row','ms-1')
+    roundResult.appendChild(display);
 }
 
-
-
 let buttons = document.getElementsByClassName('btn-lg')
+let pScore = 0;
+let cScore = 0;
 
 Array.from(buttons).forEach(function(button){
-    button.addEventListener('click', playRound)
+    button.addEventListener('click', () => {
+
+    })
 })
+
+
+
 
 // main game function
 // function game(){
