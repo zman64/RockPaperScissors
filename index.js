@@ -158,6 +158,9 @@ function declareWinner() {
         computerScore = 0;
         keepPlayerScore();
         keepCpuScore();
+        Array.from(buttons).forEach( button => {
+            button.disabled = false;
+        })
         PlayAgain.classList.add('hide')
     })
 
