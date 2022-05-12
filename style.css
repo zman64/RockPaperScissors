@@ -4,8 +4,9 @@ body {
 }
 
 .container {
-    height: 100%;
-    /* margin-top: 10%; */
+    /* min-height: 100vh */
+    /* padding-bottom: 6rem; */
+    min-height: 300px;
 }
 
 html {
@@ -16,4 +17,12 @@ html {
 
 body {
     flex-grow: 1;
+}
+
+#roundContainer {
+    /* flex-grow: 1; */
+}
+
+.hide {
+    display: none;
 }

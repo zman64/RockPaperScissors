@@ -1,3 +1,26 @@
+let computerSelection;
+let playerSelection;
+let computerScore = 0;
+let playerScore = 0;
+
+let buttons = document.getElementsByClassName('btn-lg');
+let display = document.createElement('div');
+display.classList.add('h1','text-white');
+const body = document.querySelector('body');
+//const roundResult = document.querySelector('#roundResult');
+const runningScore = document.querySelector('#runningScore')
+const container = document.getElementById('container')
+
+Array.from(buttons).forEach( button => {
+    button.addEventListener('click', () => {
+        playerSelection = button.value;
+        playRound(playerSelection, computerSelection);
+
+        if (playerScore === 5 || computerScore === 5){
+            declareWinner();
+        }
+    })
+})
 
 //return random choice of rock paper scissors
 function computerPlay(){
@@ -6,60 +29,140 @@ function computerPlay(){
     return choices[randomChoiceIndex];
 }
 
-const roundResult = document.querySelector('#roundResult');
-const runningScore = document.querySelector('#runningScore')
-const container = document.getElementById('container')
-//return a number based on who wins
 function playRound(playerSelection, computerSelection){
-    let playerSelection = playerSelection.toLowerCase();
-    let computerSelection = computerPlay().toLowerCase();
-    let display = document.createElement('div');
+    playerSelection = playerSelection.toLowerCase();
+    computerSelection = computerPlay().toLowerCase();
     let runningScore = document.createElement('div');
     
-    if(playerSelection === "Rock" && computerSelection === "Paper"){
+   if (computerSelection == playerSelection){
+       displayResults("Tie game!");
+   } else if (
+       (computerSelection == 'rock' && playerSelection == 'scissors') ||
+       (computerSelection == 'scissors' && playerSelection == 'paper') ||
+       (computerSelection == 'paper' && playerSelection == 'rock')
+   ) {
+       computerScore++;
+       keepCpuScore();
+       if (computerScore === 1){
+           displayResults(`Oh no! try again ${capitalize(computerSelection)} beats ${capitalize(playerSelection)}`);
+       } else if (computerScore === 2){
+           displayResults(
+               `You lost again! Oh no!! ${capitalize(computerSelection)} beats ${capitalize(playerSelection)}.
+               You got this! `)
+       } else if (computerScore === 3){
+           displayResults(
+               `3rd time you lose! Keep trying! ${capitalize(computerSelection)} beats ${capitalize(playerSelection)}`
+           )
+       } else if (computerScore === 4){
+           displayResults(
+               `Oh no this is it! Computer almost wins!
+               ${capitalize(computerSelection)} beats ${capitalize(playerSelection)}. Please win`
+           )
+       } else {
+           displayResults(`${capitalize(computerSelection)} beats ${capitalize(playerSelection)}`);
+       }
+   } else {
+       playerScore++;
+       keepPlayerScore();
+       if (playerScore === 1){
+           displayResults(
+               `Lets go!! You Won!!. ${capitalize(playerSelection)} beats ${capitalize(computerSelection)}`
+           )
+       } else if (playerScore === 2){
+           displayResults(
+               `Keep it up! Second win. ${capitalize(playerSelection)} beats ${capitalize(computerSelection)}`
+           )
+       } else if (playerScore === 3){
+           displayResults (
+               `Third time winning! look at you go! ${capitalize(playerSelection)} beats ${capitalize(computerSelection)}`
+           )
+       } else if (playerScore === 4){
+           displayResults(
+               `One more and you win!! ${capitalize(playerSelection)} beats ${capitalize(computerSelection)}`)
+       } else {
+           displayResults(`${capitalize(playerSelection)} beats ${capitalize(computerSelection)}`)
+       }
+   }
 
-        display.textContent = "You Lose! Paper beats Rock"
-
-    } else if (playerSelection === "Rock" && computerSelection === "Scissors"){
-        display.textContent = "You Win! Rock beats Scissors"
-       
-    } else if (playerSelection === "Paper" && computerSelection === "Rock"){
-
-        display.textContent = "You Win! Paper beats Rock"
-
-    } else if (playerSelection === "Paper" && computerSelection === "Scissors") {
-
-        display.textContent = "You Lose! Scissors beats Paper"
-
-    } else if (playerSelection === "Scissors" && computerSelection === "Rock"){
-
-        display.textContent = "You Lose! Rock beats Scissors"
-
-    } else if (playerSelection === "Scissors" && computerSelection === "Paper"){
-
-        display.textContent = "You Win! Scissors beats Paper"
-
-    }  else {
-        display.textContent = "It's a tie!"
-    }
-
-    display.classList.add('lead','text-white','mt-3','row','ms-1')
-    roundResult.appendChild(display);
+    //display.classList.add('lead','text-white','mt-3','row','ms-1')
+    //roundResult.appendChild(display);
 }
 
-let buttons = document.getElementsByClassName('btn-lg')
-let pScore = 0;
-let cScore = 0;
+function capitalize(str){
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
-Array.from(buttons).forEach(function(button){
-    button.addEventListener('click', () => {
+function displayResults(str){
+    
+    display.animate([{opacity: 0}, {opacity: 1}], {
+        duration: 300,
+        fill: "forwards",
+        iterations: 1,
+        delay: 0,
+        easing: "ease-out"
+    });
+    display.textContent = str
+    
+    container.appendChild(display)
+}
 
+function keepPlayerScore(){
+    let playerScoreBox = document.querySelector("#player-score")
+    playerScoreBox.animate([{ opacity: 0}, { opacity: 1 }], {
+        duration: 300,
+        fill: "forwards",
+        iterations: 1,
+        delay: 0,
+        easing: "ease-out"
     })
-})
+    playerScoreBox.textContent = playerScore;
+}
 
+function keepCpuScore() {
+    let computerScoreBox = document.querySelector('#computer-score');
 
+    computerScoreBox.animate([{ opacity: 0 }, { opacity: 1 }], {
+        duration: 300,
+        fill: "forwards",
+        iterations: 1,
+        delay: 0,
+        easing: "ease-out"
+    })
+    computerScoreBox.textContent = computerScore;
+}
 
+function declareWinner() {
+    Array.from(buttons).forEach( button => {
+        button.disabled = true;
+    })
+    display.animate([{opacity: 0}, {opacity: 1}], {
+        duration: 300,
+        fill: "forwards",
+        iterations: 1,
+        delay: 0,
+        easing: "ease-out"
+    });
+    if (playerScore > computerScore){
+        display.textContent = "You Won!! Thanks for playing! want to play again?"
+    } else {
+        display.textContent = "You lose!!... Maybe another day... Play again?"
+    }
+    const PlayAgain = document.createElement('button')
+    PlayAgain.classList.add('btn-md', 'btn-success', 'align-self-center');
+    PlayAgain.textContent = 'Play Again?'
+    container.appendChild(display);
+    container.appendChild(PlayAgain);
+    PlayAgain.addEventListener('click', () => {
+        display.textContent = '';
+        playerScore = 0;
+        computerScore = 0;
+        keepPlayerScore();
+        keepCpuScore();
+        PlayAgain.classList.add('hide')
+    })
 
+    
+}
 // main game function
 // function game(){
 //     var computerScore = 0;
